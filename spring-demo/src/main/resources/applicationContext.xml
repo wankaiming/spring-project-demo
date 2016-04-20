@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+                           http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.0.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+                           http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+                           
+    <context:component-scan base-package="com.project" /> 
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+          p:ignoreResourceNotFound="true" p:ignoreUnresolvablePlaceholders="true" >
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+          p:driverClassName="${jdbc.driverClassName}"
+          p:url="${jdbc.url}"
+          p:username="${jdbc.username}"
+          p:password="${jdbc.password}" />
+          
+    <!-- 
+    <bean id="dataSource"
+	          class="org.springframework.jndi.JndiObjectFactoryBean"
+	          p:jndiName="jdbc/testdb" />
+     -->
+          
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+          p:dataSource-ref="dataSource"
+          p:databaseIdProvider-ref="databaseIdProvider"
+          p:configLocation="classpath:mybatis-config.xml">
+        <property name="mapperLocations">
+            <list>
+                <value>classpath*:com/project/**/*Mapper.xml</value>
+                <value>classpath*:com/project/**/*Dao.xml</value>
+            </list>
+        </property>
+         
+		  <property name="configurationProperties">
+			<props>
+	            <prop key="callSettersOnNulls">true</prop>
+	            <prop key="lazyLoadingEnabled">true</prop>
+	            <prop key="aggressiveLazyLoading">true</prop>
+	            <prop key="multipleResultSetsEnabled">true</prop>
+	            <prop key="useColumnLabel">true</prop>
+	            <prop key="useGeneratedKeys">true</prop>
+	            <prop key="autoMappingBehavior">PARTIAL</prop>
+	            <prop key="defaultExecutorType">SIMPLE</prop>
+	            <prop key="defaultStatementTimeout">25000</prop>
+			</props>
+		  </property>
+    </bean>
+
+	<bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          p:dataSource-ref="dataSource" />
+      
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+		   <tx:method name="*" rollback-for="Exception" propagation="REQUIRED"/>
+		   <tx:method name="find*" read-only="true"/>  
+		   <tx:method name="load*" read-only="true"/>
+		   <tx:method name="get*" read-only="true"/> 
+		   <tx:method name="query*" read-only="true"/> 
+		</tx:attributes>
+	</tx:advice>
+	 
+	<aop:config>
+		<aop:pointcut id="serviceMethods" expression="execution(* com.project.*.service.*.*(..)) || execution(* com.project.*.service.*.impl.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods"/>
+	</aop:config>
+
+    <bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider" />    
+    
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"
+          p:sqlSessionFactoryBeanName="sqlSessionFactory" p:basePackage="com.project.**.mapper,com.project.**.dao" />
+
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" p:name="cacheStore" />
+            </set>
+        </property>
+    </bean>
+
+    <context:component-scan base-package="com.project">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+    <tx:annotation-driven proxy-target-class="true" />
+    <cache:annotation-driven />
+
+    <bean id="messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+          p:basename="classpath:messages" p:fallbackToSystemLocale="false"
+          p:cacheSeconds="3000" />
+
+</beans>

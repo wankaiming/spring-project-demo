@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.demo.news.dao.NewsDao">
+  <resultMap id="BaseResultMap" type="com.project.demo.news.vo.NewsListVo" >
+	<id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <collection property="newsList" select="getListByCateId" 
+    column="id" ofType="com.project.demo.entity.News"></collection>
+  </resultMap>
+  
+  <select id="getListByCate" resultMap="BaseResultMap">
+	select id,name from news_cate 
+	order by sort 
+  </select>
+  
+  <resultMap id="NewsBaseResultMap" type="com.project.demo.entity.News"
+	extends="com.project.demo.mapper.NewsMapper.BaseResultMap">
+  </resultMap>
+  
+  <select id="getListByCateId" parameterType="java.lang.Integer" resultMap="NewsBaseResultMap">
+	select id,title from news 
+	where fk_cate_id = #{id} 
+	order by sort 
+  </select>
+
+</mapper>
