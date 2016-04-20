@@ -1,5 +1,4 @@
 # spring-project-demo
-本示例项目是采用spring+mybatis+maven构建，方便以后项目直接拿来使用
 
 1> spring-demo 这个项目主要是用来做控制层和视图层。
 
