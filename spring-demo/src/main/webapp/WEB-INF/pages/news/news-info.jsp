@@ -9,10 +9,10 @@
 <%@include file="../common/header.jsp" %>
 
 <div style="padding:10px 20px 10px 20px;">
-	
-	<div><c:out value="${info.title}"></c:out></div>
-	<div><c:out value="${info.cont}"></c:out></div>
-	
+    
+    <div><c:out value="${info.title}"></c:out></div>
+    <div><c:out value="${info.cont}"></c:out></div>
+    
 </div>
 
 <%@include file="../common/footer.jsp" %>

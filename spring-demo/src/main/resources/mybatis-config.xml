@@ -3,10 +3,10 @@
 PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN"
 "http://ibatis.apache.org/dtd/ibatis-3-config.dtd">
 <configuration>
-	<settings>
-		<setting name="cacheEnabled" value="false" />
-	</settings>
-	<plugins>
-		<plugin interceptor="org.mybatis.extend.interceptor.PaginationInterceptor" />
-	</plugins>
+    <settings>
+        <setting name="cacheEnabled" value="false" />
+    </settings>
+    <plugins>
+        <plugin interceptor="org.mybatis.extend.interceptor.PaginationInterceptor" />
+    </plugins>
 </configuration>

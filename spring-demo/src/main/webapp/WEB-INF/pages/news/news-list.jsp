@@ -9,11 +9,11 @@
 <%@include file="../common/header.jsp" %>
 
 <div style="padding:10px 20px 10px 20px;">
-	<ul>
-		<c:forEach items="${newsList}" var="item" varStatus="idx">
-		<li><a href="${basePath}/news/info?id=${item.id}">${item.title}</a></li>
-		</c:forEach>
-	</ul>
+    <ul>
+        <c:forEach items="${newsList}" var="item" varStatus="idx">
+        <li><a href="${basePath}/news/info?id=${item.id}">${item.title}</a></li>
+        </c:forEach>
+    </ul>
 </div>
 
 <%@include file="../common/footer.jsp" %>

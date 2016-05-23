@@ -9,7 +9,7 @@
 <%@include file="../common/header.jsp" %>
 
 <div style="padding:10px 20px 10px 20px;">
-	<c:out value="${msg}"></c:out>
+    <c:out value="${msg}"></c:out>
 </div>
 
 <%@include file="../common/footer.jsp" %>

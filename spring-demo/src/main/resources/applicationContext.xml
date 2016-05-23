@@ -35,11 +35,11 @@
           
     <!-- 
     <bean id="dataSource"
-	          class="org.springframework.jndi.JndiObjectFactoryBean"
-	          p:jndiName="jdbc/testdb" />
+              class="org.springframework.jndi.JndiObjectFactoryBean"
+              p:jndiName="jdbc/testdb" />
      -->
           
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
           p:dataSource-ref="dataSource"
           p:databaseIdProvider-ref="databaseIdProvider"
           p:configLocation="classpath:mybatis-config.xml">
@@ -50,39 +50,39 @@
             </list>
         </property>
          
-		  <property name="configurationProperties">
-			<props>
-	            <prop key="callSettersOnNulls">true</prop>
-	            <prop key="lazyLoadingEnabled">true</prop>
-	            <prop key="aggressiveLazyLoading">true</prop>
-	            <prop key="multipleResultSetsEnabled">true</prop>
-	            <prop key="useColumnLabel">true</prop>
-	            <prop key="useGeneratedKeys">true</prop>
-	            <prop key="autoMappingBehavior">PARTIAL</prop>
-	            <prop key="defaultExecutorType">SIMPLE</prop>
-	            <prop key="defaultStatementTimeout">25000</prop>
-			</props>
-		  </property>
+          <property name="configurationProperties">
+            <props>
+                <prop key="callSettersOnNulls">true</prop>
+                <prop key="lazyLoadingEnabled">true</prop>
+                <prop key="aggressiveLazyLoading">true</prop>
+                <prop key="multipleResultSetsEnabled">true</prop>
+                <prop key="useColumnLabel">true</prop>
+                <prop key="useGeneratedKeys">true</prop>
+                <prop key="autoMappingBehavior">PARTIAL</prop>
+                <prop key="defaultExecutorType">SIMPLE</prop>
+                <prop key="defaultStatementTimeout">25000</prop>
+            </props>
+          </property>
     </bean>
 
-	<bean id="transactionManager"
+    <bean id="transactionManager"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
           p:dataSource-ref="dataSource" />
       
-	<tx:advice id="txAdvice" transaction-manager="transactionManager">
-		<tx:attributes>
-		   <tx:method name="*" rollback-for="Exception" propagation="REQUIRED"/>
-		   <tx:method name="find*" read-only="true"/>  
-		   <tx:method name="load*" read-only="true"/>
-		   <tx:method name="get*" read-only="true"/> 
-		   <tx:method name="query*" read-only="true"/> 
-		</tx:attributes>
-	</tx:advice>
-	 
-	<aop:config>
-		<aop:pointcut id="serviceMethods" expression="execution(* com.project.*.service.*.*(..)) || execution(* com.project.*.service.*.impl.*(..))"/>
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods"/>
-	</aop:config>
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+           <tx:method name="*" rollback-for="Exception" propagation="REQUIRED"/>
+           <tx:method name="find*" read-only="true"/>  
+           <tx:method name="load*" read-only="true"/>
+           <tx:method name="get*" read-only="true"/> 
+           <tx:method name="query*" read-only="true"/> 
+        </tx:attributes>
+    </tx:advice>
+     
+    <aop:config>
+        <aop:pointcut id="serviceMethods" expression="execution(* com.project.*.service.*.*(..)) || execution(* com.project.*.service.*.impl.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods"/>
+    </aop:config>
 
     <bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider" />    
     

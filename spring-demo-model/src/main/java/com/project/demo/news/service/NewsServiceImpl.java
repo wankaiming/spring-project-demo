@@ -17,45 +17,45 @@ import com.project.demo.news.vo.NewsListVo;
  */
 @Service
 public class NewsServiceImpl {
-	
-	@Autowired
-	private NewsMapper newsMapper;
-	
-	@Autowired
-	private NewsDao newsDao; 
+    
+    @Autowired
+    private NewsMapper newsMapper;
+    
+    @Autowired
+    private NewsDao newsDao; 
 
-	/**
-	 * 资讯列表获取
-	 * @author wankaiming
-	 */
-	public List<News> getNewsListByCateId(Integer cateId) {
-		if(null==cateId){
-			cateId = 0;
-		}
-		
-		NewsExample newsExample = new NewsExample();
-		newsExample.createCriteria()
-		.andFkCateIdEqualTo(cateId);
-		
-		newsExample.setOrderByClause("sort asc");
-		
-		return newsMapper.selectByExample(newsExample);
-	}
+    /**
+     * 资讯列表获取
+     * @author wankaiming
+     */
+    public List<News> getNewsListByCateId(Integer cateId) {
+        if(null==cateId){
+            cateId = 0;
+        }
+        
+        NewsExample newsExample = new NewsExample();
+        newsExample.createCriteria()
+        .andFkCateIdEqualTo(cateId);
+        
+        newsExample.setOrderByClause("sort asc");
+        
+        return newsMapper.selectByExample(newsExample);
+    }
 
-	/**
-	 * 资讯内容获取
-	 * @author wankaiming
-	 */
-	public News getNewsInfoById(Integer id) {
-		return newsMapper.selectByPrimaryKey(id);
-	}
+    /**
+     * 资讯内容获取
+     * @author wankaiming
+     */
+    public News getNewsInfoById(Integer id) {
+        return newsMapper.selectByPrimaryKey(id);
+    }
 
-	/**
-	 * 获取资讯分类以及下面的资讯列表
-	 * @author wankaiming
-	 */
-	public List<NewsListVo> getListByCate() {
-		return newsDao.getListByCate();
-	}
+    /**
+     * 获取资讯分类以及下面的资讯列表
+     * @author wankaiming
+     */
+    public List<NewsListVo> getListByCate() {
+        return newsDao.getListByCate();
+    }
 
 }

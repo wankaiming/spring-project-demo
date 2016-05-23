@@ -8,14 +8,18 @@ import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class WebApplication {
-	
-	private static ServletContext servletContext;
-	
-	private static final Properties properties = new Properties();
-	
+    
+    private static ServletContext servletContext;
+    
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
+    private static final Properties properties = new Properties();
+    
     static {
         InputStream inputStream = WebApplication.class.getResourceAsStream("/siteConfig-base.properties");
         try {
@@ -35,12 +39,12 @@ public class WebApplication {
         servletContext = sc;
     }
     
-	@PostConstruct
-	public final void init() {
-		for (Entry<Object, Object> propertiesEntry : properties.entrySet()) {
-			System.out.println(propertiesEntry.getKey()+"----------"+propertiesEntry.getValue());
-			servletContext.setAttribute((String)propertiesEntry.getKey(), (String)propertiesEntry.getValue());
-		}
-	}
+    @PostConstruct
+    public final void init() {
+        for (Entry<Object, Object> propertiesEntry : properties.entrySet()) {
+            logger.info(propertiesEntry.getKey()+"----------"+propertiesEntry.getValue());
+            servletContext.setAttribute((String)propertiesEntry.getKey(), (String)propertiesEntry.getValue());
+        }
+    }
 
 }
